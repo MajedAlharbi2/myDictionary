@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Goal 1 — Picture Dictionary</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1f3d;
+    --blue: #1a4fa0;
+    --sky: #3b82f6;
+    --gold: #f59e0b;
+    --mint: #10b981;
+    --rose: #f43f5e;
+    --lavender: #8b5cf6;
+    --coral: #f97316;
+    --white: #ffffff;
+    --off: #f8faff;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --text: #1e293b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Baloo 2', cursive;
+    background: var(--off);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--navy);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+  }
+
+  .nav-brand {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .nav-logo {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; color: var(--navy);
+  }
+  .nav-title { color: white; font-size: 16px; font-weight: 700; }
+  .nav-title span { color: var(--gold); }
+
+  .nav-search {
+    flex: 1; max-width: 380px; margin: 0 2rem;
+    position: relative;
+  }
+  .nav-search input {
+    width: 100%;
+    padding: 8px 16px 8px 40px;
+    border-radius: 50px;
+    border: none;
+    background: rgba(255,255,255,0.12);
+    color: white;
+    font-family: 'Baloo 2', cursive;
+    font-size: 14px;
+    outline: none;
+    transition: background 0.2s;
+  }
+  .nav-search input::placeholder { color: rgba(255,255,255,0.45); }
+  .nav-search input:focus { background: rgba(255,255,255,0.2); }
+  .nav-search .search-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    font-size: 15px; opacity: 0.5;
+  }
+
+  .nav-stats {
+    display: flex; gap: 16px; align-items: center;
+  }
+  .stat-pill {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.85);
+    padding: 4px 12px; border-radius: 50px;
+    font-size: 12px; font-weight: 600;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #162d5e 50%, #1a4fa0 100%);
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(59,130,246,0.25) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(245,158,11,0.15) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(245,158,11,0.15);
+    border: 1px solid rgba(245,158,11,0.4);
+    color: var(--gold);
+    padding: 6px 20px; border-radius: 50px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 800;
+    color: white;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+  }
+  .hero h1 em { font-style: normal; color: var(--gold); }
+
+  .hero-ar {
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    color: rgba(255,255,255,0.75);
+    direction: rtl;
+    margin-bottom: 2rem;
+  }
+
+  .hero-units {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center; margin-top: 1.5rem;
+  }
+  .hero-unit {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 6px 18px; border-radius: 50px;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .hero-unit:hover {
+    background: var(--gold); color: var(--navy);
+    border-color: var(--gold);
+  }
+
+  /* ── UNIT TABS ── */
+  .tabs-bar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; gap: 4px;
+    overflow-x: auto;
+    position: sticky; top: 64px; z-index: 90;
+  }
+  .tabs-bar::-webkit-scrollbar { height: 0; }
+
+  .tab {
+    padding: 14px 20px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 14px; font-weight: 600;
+    color: var(--muted);
+    border: none; background: none;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .tab:hover { color: var(--blue); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* ── CONTENT ── */
+  .main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+  .unit-block { margin-bottom: 3rem; }
+
+  .unit-heading {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .unit-num {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: var(--blue);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    color: white; flex-shrink: 0;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+  }
+  .unit-num strong { font-size: 20px; font-weight: 800; line-height: 1; }
+  .unit-texts {}
+  .unit-en { font-size: 1.4rem; font-weight: 700; color: var(--navy); }
+  .unit-ar {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem; color: var(--muted);
+    direction: rtl;
+  }
+
+  .cat-label {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--blue);
+    margin: 1.25rem 0 0.75rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .cat-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--border);
+  }
+
+  .words-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 0.5rem;
+  }
+
+  .word-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.18s;
+    cursor: default;
+  }
+  .word-card:hover {
+    border-color: var(--sky);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59,130,246,0.12);
+  }
+
+  .word-texts { flex: 1; min-width: 0; }
+  .word-en {
+    font-size: 13px; font-weight: 700;
+    color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .word-ar {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px; color: var(--muted);
+    direction: rtl; text-align: right;
+  }
+
+  .word-icon {
+    width: 56px; height: 56px; min-width: 56px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+  }
+
+  /* Category color themes */
+  .bg-blue   { background: #dbeafe; }
+  .bg-green  { background: #dcfce7; }
+  .bg-amber  { background: #fef3c7; }
+  .bg-pink   { background: #fce7f3; }
+  .bg-teal   { background: #ccfbf1; }
+  .bg-coral  { background: #ffedd5; }
+
+  /* ── NO RESULTS ── */
+  .no-results {
+    text-align: center; padding: 5rem 2rem;
+    color: var(--muted);
+  }
+  .no-results .nr-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .no-results p { font-size: 1.1rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 2rem;
+    font-size: 13px;
+    margin-top: 4rem;
+  }
+  footer strong { color: var(--gold); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .unit-block { animation: fadeUp 0.4s ease both; }
+  .unit-block:nth-child(1) { animation-delay: 0.05s; }
+  .unit-block:nth-child(2) { animation-delay: 0.1s; }
+  .unit-block:nth-child(3) { animation-delay: 0.15s; }
+  .unit-block:nth-child(4) { animation-delay: 0.2s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .nav-stats { display: none; }
+    .nav-search { max-width: none; margin: 0 1rem 0 0.5rem; }
+    .words-grid { grid-template-columns: 1fr 1fr; }
+    .hero { padding: 3rem 1.25rem 2.5rem; }
+    .main { padding: 1.25rem; }
+  }
+
+  /* highlight match */
+  mark { background: #fef08a; border-radius: 2px; padding: 0 2px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="nav-logo">SG</div>
+    <span class="nav-title">Super <span>Goal 1</span></span>
+  </a>
+  <div class="nav-search">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search words… ابحث عن كلمة" oninput="handleSearch()">
+  </div>
+  <div class="nav-stats">
+    <span class="stat-pill" id="wordCount">260 words</span>
+    <span class="stat-pill">8 units</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Ministry of Education · KSA · 1st Intermediate Grade</div>
+  <h1>Super <em>Goal 1</em><br>Picture Dictionary</h1>
+  <div class="hero-ar">قاموس منهج سوبر قول 1 — الصف الأول متوسط</div>
+  <div class="hero-units">
+    <a class="hero-unit" href="#" onclick="setUnit('9');return false;">Unit 9 · Jobs</a>
+    <a class="hero-unit" href="#" onclick="setUnit('10');return false;">Unit 10 · School</a>
+    <a class="hero-unit" href="#" onclick="setUnit('11');return false;">Unit 11 · Daily Routine</a>
+    <a class="hero-unit" href="#" onclick="setUnit('12');return false;">Unit 12 · Places</a>
+    <a class="hero-unit" href="#" onclick="setUnit('13');return false;">Unit 13 · Clothes</a>
+    <a class="hero-unit" href="#" onclick="setUnit('14');return false;">Unit 14 · Celebrations</a>
+    <a class="hero-unit" href="#" onclick="setUnit('15');return false;">Unit 15 · Then &amp; Now</a>
+    <a class="hero-unit" href="#" onclick="setUnit('16');return false;">Unit 16 · Last Week</a>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-bar" id="tabsBar">
+  <button class="tab active" onclick="setUnit('all')">All Units</button>
+  <button class="tab" onclick="setUnit('9')">Unit 9</button>
+  <button class="tab" onclick="setUnit('10')">Unit 10</button>
+  <button class="tab" onclick="setUnit('11')">Unit 11</button>
+  <button class="tab" onclick="setUnit('12')">Unit 12</button>
+  <button class="tab" onclick="setUnit('13')">Unit 13</button>
+  <button class="tab" onclick="setUnit('14')">Unit 14</button>
+  <button class="tab" onclick="setUnit('15')">Unit 15</button>
+  <button class="tab" onclick="setUnit('16')">Unit 16</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main" id="mainContent"></div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Super Goal 1 Picture Dictionary</strong> · English Language · 1st Intermediate Grade · 2nd Semester<br>
+  <span style="font-family:'Tajawal',sans-serif;direction:rtl;">قاموس منهج سوبر قول 1 · اللغة الإنجليزية · الصف الأول متوسط · الفصل الدراسي الثاني</span><br>
+  <span style="margin-top:8px;display:inline-block;opacity:0.8;">Designed by: Majed Alharbi · Central School in Medina</span><br>
+  <span style="font-family:'Tajawal',sans-serif;direction:rtl;display:block;margin-top:4px;opacity:0.8;">تصميم: أ. ماجد الحربي — المدرسة المركزية بالمدينة</span>
+</footer>
+
+<script>
+const data = {
+  '9': { en: 'What Do You Do?', ar: 'ما هي مهنتك؟', categories: [
+    { label: 'Nouns — الأسماء', bg: 'bg-blue', words: [
+      { en: 'airline', ar: 'خطوط الطيران', icon: '✈️' }, { en: 'advertising', ar: 'إعلان', icon: '📢' },
+      { en: 'design and art', ar: 'الفن والتصميم', icon: '🎨' }, { en: 'architecture', ar: 'هندسة معمارية', icon: '🏛️' },
+      { en: 'future', ar: 'المستقبل', icon: '🔭' }, { en: 'clinic', ar: 'عيادة', icon: '🏥' },
+      { en: 'job', ar: 'وظيفة / عمل', icon: '💼' }, { en: 'gadget', ar: 'أداة / آلة', icon: '🔧' },
+      { en: 'profession', ar: 'المهنة', icon: '🎓' }, { en: 'newspaper', ar: 'جريدة / صحيفة', icon: '📰' },
+    ]},
+    { label: 'Jobs & Occupations — المهن والوظائف', bg: 'bg-green', words: [
+      { en: 'bus driver', ar: 'سائق الحافلة', icon: '🚌' }, { en: 'cameraman', ar: 'المصور', icon: '📷' },
+      { en: 'carpenter', ar: 'النجار', icon: '🪚' }, { en: 'chef', ar: 'الشيف', icon: '👨‍🍳' },
+      { en: 'cook', ar: 'الطاخ', icon: '🍳' }, { en: 'doctor', ar: 'الطبيب', icon: '🩺' },
+      { en: 'flight attendant', ar: 'مضيف الطيران', icon: '🛫' }, { en: 'lawyer', ar: 'المحامي', icon: '⚖️' },
+      { en: 'mechanic', ar: 'الميكانيكي', icon: '🔩' }, { en: 'reporter', ar: 'المراسل', icon: '🎤' },
+      { en: 'salesperson', ar: 'البائع', icon: '🛍️' }, { en: 'teacher', ar: 'المعلم', icon: '📚' },
+      { en: 'waiter', ar: 'النادل', icon: '🍽️' }, { en: 'website designer', ar: 'مصمم مواقع', icon: '💻' },
+    ]},
+    { label: 'Verbs — الأفعال', bg: 'bg-amber', words: [
+      { en: 'cook', ar: 'يطبخ', icon: '🍲' }, { en: 'cut', ar: 'يقطع', icon: '✂️' },
+      { en: 'design', ar: 'يصمم', icon: '🖌️' }, { en: 'drive', ar: 'يقود', icon: '🚗' },
+      { en: 'make', ar: 'يصنع', icon: '🔨' }, { en: 'meet', ar: 'يقابل', icon: '🤝' },
+      { en: 'sell', ar: 'يبيع', icon: '💰' }, { en: 'travel', ar: 'يسافر', icon: '🌍' },
+    ]},
+    { label: 'Adjectives — الصفات', bg: 'bg-pink', words: [
+      { en: 'interested (in)', ar: 'مهتم بـ', icon: '💡' }, { en: 'professional', ar: 'محترف', icon: '🏆' },
+    ]},
+  ]},
+  '10': { en: "What's School Like?", ar: 'كيف تبدو المدرسة؟', categories: [
+    { label: 'Nouns — الأسماء', bg: 'bg-blue', words: [
+      { en: 'archaeology', ar: 'علم الآثار', icon: '🏺' }, { en: 'basketball', ar: 'كرة السلة', icon: '🏀' },
+      { en: 'club', ar: 'نادي', icon: '🎭' }, { en: 'drama', ar: 'دراما', icon: '🎬' },
+      { en: 'exchange student', ar: 'طالب مبتعث', icon: '🌐' }, { en: 'expedition', ar: 'بعثة', icon: '🗺️' },
+      { en: 'glasses', ar: 'نظارات', icon: '👓' }, { en: 'poetry', ar: 'الشعر', icon: '📜' },
+      { en: 'schedule', ar: 'جدول', icon: '📅' }, { en: 'subject', ar: 'مادة دراسية', icon: '📖' },
+      { en: 'team', ar: 'فريق', icon: '👥' }, { en: 'volleyball', ar: 'كرة الطائرة', icon: '🏐' },
+    ]},
+    { label: 'School Subjects — المواد الدراسية', bg: 'bg-teal', words: [
+      { en: 'art', ar: 'الفنية', icon: '🎨' }, { en: 'computer science', ar: 'علم الكمبيوتر', icon: '💻' },
+      { en: 'English', ar: 'اللغة الإنجليزية', icon: '🇬🇧' }, { en: 'geography', ar: 'الجغرافيا', icon: '🌍' },
+      { en: 'health', ar: 'الصحة', icon: '❤️' }, { en: 'history', ar: 'التاريخ', icon: '📜' },
+      { en: 'math', ar: 'الرياضيات', icon: '🔢' }, { en: 'PE', ar: 'التربية البدنية', icon: '⚽' },
+      { en: 'science', ar: 'العلوم', icon: '🔬' },
+    ]},
+    { label: 'Adjectives — الصفات', bg: 'bg-amber', words: [
+      { en: 'active', ar: 'نشيط', icon: '⚡' }, { en: 'athletic', ar: 'رياضي', icon: '🏅' },
+      { en: 'boring', ar: 'ممل', icon: '😴' }, { en: 'challenging', ar: 'صعب / تحدي', icon: '🧩' },
+      { en: 'difficult', ar: 'صعب', icon: '😓' }, { en: 'easy', ar: 'سهل', icon: '😊' },
+      { en: 'fascinating', ar: 'جذاب / ممتع', icon: '🤩' }, { en: 'friendly', ar: 'ودود / لطيف', icon: '😄' },
+      { en: 'fun', ar: 'ممتع', icon: '🎉' }, { en: 'hard', ar: 'صعب', icon: '💪' },
+      { en: 'intelligent', ar: 'ذكي', icon: '🧠' }, { en: 'interesting', ar: 'مثير للاهتمام', icon: '⭐' },
+      { en: 'smart', ar: 'ذكي', icon: '🎯' }, { en: 'strict', ar: 'صارم / شديد', icon: '📏' },
+    ]},
+    { label: 'Appearance — المظهر', bg: 'bg-pink', words: [
+      { en: 'black hair', ar: 'أسود الشعر', icon: '🖤' }, { en: 'blond hair', ar: 'أشقر الشعر', icon: '👱' },
+      { en: 'blue eyes', ar: 'العيون زرقاء', icon: '👁️' }, { en: 'brown hair/eyes', ar: 'بني الشعر/العيون', icon: '🤎' },
+      { en: 'long hair', ar: 'الشعر طويل', icon: '💇' }, { en: 'short hair', ar: 'قصير الشعر', icon: '💈' },
+      { en: 'tall', ar: 'طويل', icon: '📏' }, { en: 'thin', ar: 'نحيف', icon: '🪶' },
+    ]},
+  ]},
+  '11': { en: 'What Time Do You Get Up?', ar: 'متى تستيقظ؟', categories: [
+    { label: 'Nouns — الأسماء', bg: 'bg-blue', words: [
+      { en: 'activity', ar: 'نشاط', icon: '🏃' }, { en: 'breakfast', ar: 'الفطور', icon: '🍳' },
+      { en: 'dinner', ar: 'العشاء', icon: '🍽️' }, { en: 'karate', ar: 'الكاراتيه', icon: '🥋' },
+      { en: 'lunch', ar: 'الغداء', icon: '🥗' }, { en: 'martial arts', ar: 'الفنون القتالية', icon: '🥊' },
+      { en: 'traffic', ar: 'ازدحام المرور', icon: '🚦' }, { en: 'weekday', ar: 'يوم الأسبوع', icon: '📆' },
+      { en: 'weeknight', ar: 'ليلة الأسبوع', icon: '🌙' }, { en: 'weekend', ar: 'نهاية الأسبوع', icon: '🎊' },
+    ]},
+    { label: 'Verbs & Phrases — الأفعال والعبارات', bg: 'bg-green', words: [
+      { en: 'concentrate', ar: 'يركز', icon: '🎯' }, { en: 'get up', ar: 'ينهض', icon: '⏰' },
+      { en: 'learn', ar: 'يتعلم', icon: '📚' }, { en: 'wake up', ar: 'يستيقظ', icon: '🌅' },
+      { en: 'work out', ar: 'يتدرب / يتمرن', icon: '🏋️' }, { en: 'brush teeth', ar: 'يفرش أسنانه', icon: '🪥' },
+      { en: 'check email', ar: 'يتفقد البريد', icon: '📧' }, { en: 'go to bed', ar: 'يذهب للنوم', icon: '🛏️' },
+      { en: 'play football', ar: 'يلعب كرة القدم', icon: '⚽' }, { en: 'ride home', ar: 'يعود للمنزل', icon: '🏠' },
+      { en: 'take a bath', ar: 'يستحم', icon: '🛁' }, { en: 'take a shower', ar: 'يأخذ دشة', icon: '🚿' },
+    ]},
+    { label: 'Frequency Adverbs — تكرار', bg: 'bg-amber', words: [
+      { en: 'always', ar: 'دائمًا', icon: '🔁' }, { en: 'usually', ar: 'غالبًا', icon: '📊' },
+      { en: 'sometimes', ar: 'أحيانًا', icon: '🔀' }, { en: 'never', ar: 'أبدًا', icon: '🚫' },
+      { en: 'early', ar: 'مبكرًا', icon: '🌄' }, { en: 'late', ar: 'متأخرًا', icon: '🌆' },
+    ]},
+  ]},
+  '12': { en: 'What Can You Do There?', ar: 'ما الذي يمكنك فعله هناك؟', categories: [
+    { label: 'Places in Town — أماكن في المدينة', bg: 'bg-green', words: [
+      { en: 'airport', ar: 'مطار', icon: '✈️' }, { en: 'bank', ar: 'بنك', icon: '🏦' },
+      { en: 'bookstore', ar: 'متجر للكتب', icon: '📚' }, { en: 'bus station', ar: 'محطة الباص', icon: '🚌' },
+      { en: 'gym', ar: 'النادي الرياضي', icon: '🏋️' }, { en: 'hospital', ar: 'مستشفى', icon: '🏥' },
+      { en: 'hotel', ar: 'فندق', icon: '🏨' }, { en: 'mall', ar: 'مركز للتسوق', icon: '🛒' },
+      { en: 'museum', ar: 'متحف', icon: '🏛️' }, { en: 'park', ar: 'حديقة', icon: '🌳' },
+      { en: 'restaurant', ar: 'مطعم', icon: '🍔' }, { en: 'supermarket', ar: 'سوبرماركت', icon: '🛍️' },
+      { en: 'beach', ar: 'شاطئ', icon: '🏖️' }, { en: 'ocean', ar: 'المحيط', icon: '🌊' },
+      { en: 'resort', ar: 'منتجع', icon: '🌴' },
+    ]},
+    { label: 'Sports Verbs — رياضة وأنشطة', bg: 'bg-teal', words: [
+      { en: 'climb', ar: 'يتسلق', icon: '🧗' }, { en: 'dive', ar: 'يغطس', icon: '🤿' },
+      { en: 'fish', ar: 'يصيد السمك', icon: '🎣' }, { en: 'hike', ar: 'يتنزه', icon: '🥾' },
+      { en: 'ice-skate', ar: 'يتزلج على الجليد', icon: '⛸️' }, { en: 'play golf', ar: 'يلعب الغولف', icon: '⛳' },
+      { en: 'play tennis', ar: 'يلعب التنس', icon: '🎾' }, { en: 'ride a bike', ar: 'يركب الدراجة', icon: '🚴' },
+      { en: 'ride a horse', ar: 'يركب الخيل', icon: '🐎' }, { en: 'rollerblade', ar: 'يتزلج بالأحذية', icon: '🛼' },
+      { en: 'sail', ar: 'يبحر بالقارب', icon: '⛵' }, { en: 'snorkel', ar: 'يسبح بأنبوب التنفس', icon: '🤿' },
+      { en: 'swim', ar: 'يسبح', icon: '🏊' },
+    ]},
+  ]},
+  '13': { en: 'What Are You Going To Wear?', ar: 'ماذا ستُرتدي هناك؟', categories: [
+    { label: 'Nouns — الأسماء', bg: 'bg-blue', words: [
+      { en: 'attraction', ar: 'مكان لجذب الزوار', icon: '⭐' }, { en: 'graduation', ar: 'تخرج', icon: '🎓' },
+      { en: 'style', ar: 'أسلوب', icon: '✨' }, { en: 'transportation', ar: 'وسيلة مواصلات', icon: '🚗' },
+      { en: 'waterfall', ar: 'شلال', icon: '🌊' }, { en: 'weather', ar: 'طقس', icon: '🌤️' },
+      { en: 'wedding', ar: 'زواج', icon: '💍' },
+    ]},
+    { label: 'Clothes — الملابس', bg: 'bg-pink', words: [
+      { en: 'abaya', ar: 'عباءة', icon: '👘' }, { en: 'blouse', ar: 'بلوزة', icon: '👚' },
+      { en: 'boots', ar: 'أجزمة', icon: '👢' }, { en: 'coat', ar: 'معطف', icon: '🧥' },
+      { en: 'dress', ar: 'فستان', icon: '👗' }, { en: 'gloves', ar: 'قفازات', icon: '🧤' },
+      { en: 'jacket', ar: 'جاكيت', icon: '🧥' }, { en: 'jeans', ar: 'جينز', icon: '👖' },
+      { en: 'pants', ar: 'بنطلون', icon: '👖' }, { en: 'raincoat', ar: 'معطف المطر', icon: '🌧️' },
+      { en: 'sandals', ar: 'صندل', icon: '👡' }, { en: 'scarf', ar: 'وشاح', icon: '🧣' },
+      { en: 'shirt', ar: 'قميص', icon: '👕' }, { en: 'shomagh', ar: 'شماغ', icon: '🧕' },
+      { en: 'shoes', ar: 'أحذية', icon: '👟' }, { en: 'shorts', ar: 'شورت', icon: '🩳' },
+      { en: 'skirt', ar: 'تنورة', icon: '👗' }, { en: 'sneakers', ar: 'حذاء رياضي', icon: '👟' },
+      { en: 'socks', ar: 'جوارب', icon: '🧦' }, { en: 'suit', ar: 'بذلة', icon: '🤵' },
+      { en: 'sweater', ar: 'سترة', icon: '🧶' }, { en: 'thobe', ar: 'ثوب', icon: '👘' },
+      { en: 'tie', ar: 'ربطة عنق', icon: '👔' }, { en: 't-shirt', ar: 'تيشيرت', icon: '👕' },
+    ]},
+    { label: 'Colors — الألوان', bg: 'bg-teal', words: [
+      { en: 'beige', ar: 'بيج', icon: '🟤' }, { en: 'black', ar: 'أسود', icon: '⬛' },
+      { en: 'blue', ar: 'أزرق', icon: '🟦' }, { en: 'brown', ar: 'بني', icon: '🟫' },
+      { en: 'dark green', ar: 'أخضر غامق', icon: '🌲' }, { en: 'gray', ar: 'رمادي', icon: '🩶' },
+      { en: 'green', ar: 'أخضر', icon: '🟩' }, { en: 'light blue', ar: 'أزرق فاتح', icon: '🔵' },
+      { en: 'orange', ar: 'برتقالي', icon: '🟠' }, { en: 'pink', ar: 'وردي', icon: '🌸' },
+      { en: 'purple', ar: 'بنفسجي', icon: '🟣' }, { en: 'red', ar: 'أحمر', icon: '🔴' },
+      { en: 'white', ar: 'أبيض', icon: '⬜' }, { en: 'yellow', ar: 'أصفر', icon: '🟡' },
+    ]},
+  ]},
+  '14': { en: "Let's Celebrate!", ar: 'لنحتفل', categories: [
+    { label: 'Nouns — الأسماء', bg: 'bg-blue', words: [
+      { en: 'card', ar: 'بطاقة', icon: '💌' }, { en: 'celebration', ar: 'احتفال', icon: '🎉' },
+      { en: 'federation', ar: 'توحيد', icon: '🤝' }, { en: 'fireworks', ar: 'ألعاب نارية', icon: '🎆' },
+      { en: 'flag', ar: 'علم', icon: '🚩' }, { en: 'generosity', ar: 'كرم', icon: '🤲' },
+      { en: 'gift', ar: 'هدية', icon: '🎁' }, { en: 'holiday', ar: 'عيد / إجازة', icon: '🌟' },
+      { en: 'independence', ar: 'الاستقلال', icon: '🦅' }, { en: 'invitation', ar: 'دعوة', icon: '📩' },
+      { en: 'neighbor', ar: 'جار', icon: '🏘️' }, { en: 'parade', ar: 'مسيرة احتفالية', icon: '🎭' },
+      { en: 'snack', ar: 'وجبة خفيفة', icon: '🍪' },
+    ]},
+    { label: 'Holidays — الأعياد', bg: 'bg-amber', words: [
+      { en: 'Eid Al-Adha', ar: 'عيد الأضحى', icon: '🌙' }, { en: 'Eid Al-Fitr', ar: 'عيد الفطر', icon: '🌙' },
+      { en: 'Independence Day', ar: 'يوم الاستقلال', icon: '🎊' },
+      { en: 'Liberation Day', ar: 'يوم التحرير', icon: '🕊️' },
+      { en: 'National Day', ar: 'اليوم الوطني', icon: '🇸🇦' },
+    ]},
+    { label: 'Verbs — الأفعال', bg: 'bg-green', words: [
+      { en: 'celebrate', ar: 'يحتفل', icon: '🎊' }, { en: 'decorate', ar: 'يزيّن', icon: '🌺' },
+      { en: 'donate', ar: 'يتبرع', icon: '💝' }, { en: 'exchange', ar: 'يتبادل', icon: '🔄' },
+      { en: 'get together', ar: 'يجتمع', icon: '👨‍👩‍👦' }, { en: 'invite', ar: 'يدعو', icon: '📧' },
+      { en: 'know', ar: 'يعرف', icon: '💡' }, { en: 'offer', ar: 'يقدم', icon: '🤲' },
+      { en: 'sacrifice', ar: 'يضحي', icon: '🐑' }, { en: 'send', ar: 'يرسل', icon: '📮' },
+      { en: 'share', ar: 'يشارك', icon: '🤗' }, { en: 'show', ar: 'يُظهر', icon: '👁️' },
+    ]},
+  ]},
+  '15': { en: 'Then and Now', ar: 'الآن وسابقًا', categories: [
+    { label: 'Nouns — الأسماء', bg: 'bg-blue', words: [
+      { en: 'area', ar: 'منطقة', icon: '🗺️' }, { en: 'balcony', ar: 'بلكونة', icon: '🏢' },
+      { en: 'boss', ar: 'رئيس / زعيم', icon: '👔' }, { en: 'businessman', ar: 'رجل أعمال', icon: '💼' },
+      { en: 'celebrity', ar: 'مشهور', icon: '⭐' }, { en: 'consultant', ar: 'مستشار', icon: '📊' },
+      { en: 'football striker', ar: 'مهاجم كرة قدم', icon: '⚽' }, { en: 'member', ar: 'عضو', icon: '👥' },
+      { en: 'pedestrian', ar: 'عبور المشاة', icon: '🚶' }, { en: 'population', ar: 'كثافة سكانية', icon: '👫' },
+      { en: 'shelter', ar: 'ملجأ', icon: '🏠' }, { en: 'skyscraper', ar: 'ناطحة سحاب', icon: '🏙️' },
+      { en: 'story', ar: 'قصة', icon: '📖' }, { en: 'tournament', ar: 'بطولة / دوري', icon: '🏆' },
+    ]},
+    { label: 'Adjectives — الصفات', bg: 'bg-amber', words: [
+      { en: 'attractive', ar: 'جذاب', icon: '✨' }, { en: 'modern', ar: 'حديث', icon: '🏗️' },
+      { en: 'narrow', ar: 'ضيق', icon: '↔️' }, { en: 'successful', ar: 'ناجح', icon: '🎯' },
+      { en: 'awesome', ar: 'رائع / مذهل', icon: '🤩' }, { en: 'bad', ar: 'سيء', icon: '👎' },
+      { en: 'beautiful', ar: 'جميل', icon: '🌹' }, { en: 'boring', ar: 'ممل', icon: '😴' },
+      { en: 'crowded', ar: 'مزدحم', icon: '👥' }, { en: 'great', ar: 'رائع', icon: '🌟' },
+      { en: 'interesting', ar: 'مثير للاهتمام', icon: '💫' }, { en: 'OK', ar: 'لا بأس', icon: '👌' },
+      { en: 'terrible', ar: 'فظيع / سيء جدًا', icon: '😱' }, { en: 'uncomfortable', ar: 'غير مريح', icon: '😣' },
+    ]},
+  ]},
+  '16': { en: 'What Did You Do Last Week?', ar: 'ماذا فعلت الأسبوع الماضي؟', categories: [
+    { label: 'Nouns — الأسماء', bg: 'bg-blue', words: [
+      { en: 'accident', ar: 'حادث', icon: '⚠️' }, { en: 'assignment', ar: 'مهمة / واجب', icon: '📝' },
+      { en: 'beach volleyball', ar: 'كرة طائرة شاطئية', icon: '🏐' }, { en: 'console', ar: 'مؤاساة / وحدة', icon: '🎮' },
+      { en: 'guest', ar: 'ضيف', icon: '🏠' }, { en: 'race', ar: 'سباق', icon: '🏁' },
+      { en: 'rice', ar: 'الرز', icon: '🍚' }, { en: 'topping', ar: 'غطاء علوي', icon: '🍕' },
+    ]},
+    { label: 'Verbs & Phrases — الأفعال والعبارات', bg: 'bg-green', words: [
+      { en: 'impress', ar: 'يُذهل', icon: '😮' }, { en: 'melt', ar: 'يذوب', icon: '🧊' },
+      { en: 'stay', ar: 'يبقى', icon: '⏳' }, { en: 'clean out', ar: 'ينظف', icon: '🧹' },
+      { en: 'go out', ar: 'يخرج', icon: '🚪' }, { en: 'have a great time', ar: 'يستمتع بوقته', icon: '🎉' },
+      { en: 'search for', ar: 'يبحث عن', icon: '🔍' }, { en: 'spend time', ar: 'يقضي الوقت', icon: '⏰' },
+      { en: 'stay home', ar: 'يبقى بالمنزل', icon: '🏠' },
+    ]},
+    { label: 'Adjectives — الصفات', bg: 'bg-coral', words: [
+      { en: 'common', ar: 'مشترك', icon: '🔗' }, { en: 'demanding', ar: 'متطلب', icon: '📋' },
+      { en: 'ethnic', ar: 'عرقي الأصل', icon: '🌍' }, { en: 'expensive', ar: 'غالي', icon: '💸' },
+      { en: 'spicy', ar: 'حار', icon: '🌶️' },
+    ]},
+  ]},
+};
+
+let activeUnit = 'all';
+
+function highlight(text, q) {
+  if (!q) return text;
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+function render() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const unitIds = activeUnit === 'all' ? Object.keys(data) : [activeUnit];
+  const main = document.getElementById('mainContent');
+  let html = '';
+  let total = 0;
+
+  unitIds.forEach(uid => {
+    const unit = data[uid];
+    let unitHtml = '';
+    unit.categories.forEach(cat => {
+      const filtered = cat.words.filter(w =>
+        !q || w.en.toLowerCase().includes(q) || w.ar.includes(q)
+      );
+      if (!filtered.length) return;
+      total += filtered.length;
+      unitHtml += `<div class="cat-label">${cat.label}</div><div class="words-grid">`;
+      filtered.forEach(w => {
+        unitHtml += `<div class="word-card">
+          <div class="word-texts">
+            <div class="word-en">${highlight(w.en, q)}</div>
+            <div class="word-ar">${highlight(w.ar, q)}</div>
+          </div>
+          <div class="word-icon ${cat.bg}">${w.icon}</div>
+        </div>`;
+      });
+      unitHtml += `</div>`;
+    });
+
+    if (unitHtml) {
+      html += `<div class="unit-block">
+        <div class="unit-heading">
+          <div class="unit-num"><span>UNIT</span><strong>${uid}</strong></div>
+          <div class="unit-texts">
+            <div class="unit-en">${unit.en}</div>
+            <div class="unit-ar">${unit.ar}</div>
+          </div>
+        </div>
+        ${unitHtml}
+      </div>`;
+    }
+  });
+
+  if (!total) {
+    html = `<div class="no-results">
+      <div class="nr-icon">🔍</div>
+      <p>No results found for "<strong>${q}</strong>"</p>
+    </div>`;
+  }
+
+  main.innerHTML = html;
+  document.getElementById('wordCount').textContent = total + ' words';
+}
+
+function setUnit(id) {
+  activeUnit = id;
+  document.getElementById('searchInput').value = '';
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const ids = ['all','9','10','11','12','13','14','15','16'];
+    t.classList.toggle('active', ids[i] === id);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render();
+}
+
+function handleSearch() {
+  activeUnit = 'all';
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===0));
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
